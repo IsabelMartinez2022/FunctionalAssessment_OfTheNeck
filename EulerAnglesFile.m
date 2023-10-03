@@ -10,7 +10,7 @@ for i = 1:length(patientsA)
     headset_data = patient_data(strcmp(patient_data.Var3, 'H'), :);
         % We extract the Euler angles (x, y, z) from the headset 
         euler_angles = headset_data(:, 11:13);
-        % Save the extracted data to a new CSV file
+        % We save the extracted data to a new CSV file
         writetable(euler_angles, strcat(erase(patientsA(i).name,".csv"),'_extracted.csv'));
 end
 
@@ -24,7 +24,7 @@ for i = 1:length(patientsB)
     headset_data = patient_data(strcmp(patient_data.Var3, 'H'), :);
         % We extract the Euler angles (x, y, z) from the headset 
         euler_angles = headset_data(:, 11:13);
-        % Save the extracted data to a new CSV file
+        % We save the extracted data to a new CSV file
         writetable(euler_angles,strcat(erase(patientsB(i).name,".csv"),'_extracted.csv'));
 end
 
