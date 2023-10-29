@@ -16,12 +16,13 @@
         %QUESTION: TRANSFORM TO QUATERNION??? 
         %With eul2quat()
         %With quatmultiply()
+        %or slerp()
         
         window_length = 256;
         overlap = window_length/2;
         nfft = 512;
       
-        [s_x,f_x,t_x]=spectrogram(patient_xyz(:,1),window_length,overlap,nfft,fs);
+        [s_x,f_x,t_x]=spectrogram(continuous_x,window_length,overlap,nfft,fs);
         figure;
         subplot(3,1,1)
         waterplot(s_x,f_x,t_x);
