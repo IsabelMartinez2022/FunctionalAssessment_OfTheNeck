@@ -36,7 +36,8 @@
 
 function waterplot(s,f,t)
 % Waterfall plot of spectrogram from MatLab libreries
-    waterfall(f,t,power(abs(s)',2))
+    waterfall(f,t,abs(s)'.^2);
+    %Another option for the amplitude: 10 * log10(abs(s)')
     set(gca,XDir="reverse",View=[30 50])
     xlabel("Frequency (Hz)")
     ylabel("Time (s)")
