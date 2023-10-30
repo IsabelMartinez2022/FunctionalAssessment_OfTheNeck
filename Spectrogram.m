@@ -1,9 +1,9 @@
 %Task 2
-%Calculation of the spectrogram of each patient
+%Calculation of the spectrogram of each patient and saved as a png image
 
-%for i = 1:200
-    if isfile("Pte_"+"19"+"​_extracted.csv")
-        read_data= readtable("Pte_"+"19"+"​_extracted.csv");
+for i = 1:200
+    if isfile("Pte_"+i+"​_extracted.csv")
+        read_data= readtable("Pte_"+i+"​_extracted.csv");
         read_data_array = table2array(read_data);
         %patient_xyz contains the Euler angles
         patient_xyz= str2double(strrep(read_data_array,',','.')); 
@@ -19,6 +19,7 @@
         overlap = window_length/2;
         nfft = 512;
       
+        %Calculation of the spectrogram for each time series
         [s_x,f_x,t_x]=spectrogram(patient_xyz(:,1),window_length,overlap,nfft,fs);
         figure;
         subplot(3,1,1)
@@ -31,8 +32,11 @@
         [s_z,f_z,t_z]=spectrogram(patient_xyz(:,3),window_length,overlap,nfft,fs);
         subplot(3,1,3)
         waterplot(s_z,f_z,t_z);
+
+        filename= "Spectrogram_Patient"+i+".png";
+        saveas(gcf,filename);
     end 
-%end
+end
 
 function waterplot(s,f,t)
 % Waterfall plot of spectrogram from MatLab libreries
