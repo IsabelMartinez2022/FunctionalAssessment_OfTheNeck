@@ -43,6 +43,7 @@ for i=1:200
 
         cd (groupAfolder+"\GroupA_spectrograms\");
         saveas(gcf,"Spectrogram_Patient"+i+".png");
+        close(gcf);
         cd (groupAfolder);
     end 
 end
@@ -82,6 +83,7 @@ for j = 1:200
 
         cd (groupBfolder+"\GroupB_spectrograms\");
         saveas(gcf,"Spectrogram_Patient"+j+".png");
+        close(gcf);
         cd (groupBfolder);
     end 
 end
