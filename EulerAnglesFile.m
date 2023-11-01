@@ -1,48 +1,48 @@
 %Task1
 %Saves the Euler angles measured with the headset to a new file
-
-rootfolder = pwd;
-patientsA= dir(fullfile(rootfolder,'GroupA','*.csv'));
+%Saves the location of the first apple that appears and every apple that is
+%stored
 
 if not(isfolder("GroupA_extracted"))
 mkdir("GroupA_extracted")
 end
 
-for i = 1:length(patientsA)
-    pathA = fullfile(rootfolder,'GroupA');
-    opts = detectImportOptions(fullfile(pathA, patientsA(i).name));
-    opts = setvartype(opts,'string');
-    patient_data = readtable(fullfile(pathA, patientsA(i).name),opts);
-    % We search for the headset (H) data
-    headset_data = patient_data(strcmp(patient_data.Var3, 'H'), :);
-        % We extract the Euler angles (x, y, z) from the headset 
-        euler_angles = headset_data(:, 11:13);
-        % We save the extracted data to a new CSV file
-        cd (rootfolder+"\GroupA_extracted\");
-        filename= strcat(erase(patientsA(i).name,".csv"),'_extracted.csv');
-        writetable(euler_angles, filename);
-end
-
-cd (rootfolder);
-patientsB= dir(fullfile(rootfolder,'GroupB','*.csv'));
-
 if not(isfolder("GroupB_extracted"))
 mkdir("GroupB_extracted")
 end
 
-for j = 1:length(patientsB)
-    pathB = fullfile(rootfolder,'GroupB');
-    opts = detectImportOptions(fullfile(pathB, patientsB(j).name));
+readCSV('GroupA');
+readCSV('GroupB');
+
+function readCSV(patientsgroup)
+
+rootfolder = pwd;
+patients= dir(fullfile(rootfolder,patientsgroup,'*.csv'));
+
+for i = 1:length(patients)
+    path = fullfile(rootfolder,patientsgroup);
+    opts = detectImportOptions(fullfile(path, patients(i).name));
     opts = setvartype(opts,'string');
-    patient_data = readtable(fullfile(pathB, patientsB(j).name),opts);
-    % We search for the headset (H) data
-    headset_data = patient_data(strcmp(patient_data.Var3, 'H'), :);
-        % We extract the Euler angles (x, y, z) from the headset 
-        euler_angles = headset_data(:, 11:13);
-        % We save the extracted data to a new CSV file
-        cd (rootfolder+"\GroupB_extracted\");
-        filename= strcat(erase(patientsA(i).name,".csv"),'_extracted.csv');
-        writetable(euler_angles,strcat(erase(patientsB(j).name,".csv"),'_extracted.csv'));
+    patient_data = readtable(fullfile(path, patients(i).name),opts);
+    
+    %We search for the first apple that appears in each patient
+    for j= 1:size(patient_data)
+        if contains(patient_data(j,:).Var3, "spawn,Apple 0")
+            patient_data_initiated= patient_data(j:height(patient_data),:);
+        end
+    end
+
+    % We search for the headset (H) data and location of stored apples
+    search = ["H","stored"];
+    headset_data = patient_data_initiated(contains(patient_data_initiated.Var3,search), :);
+    % We extract the Euler angles (x, y, z) from the headset data and the positition of the
+    % stored apples
+    euler_angles = headset_data(:, [1 3 11:13]);
+    % We save the extracted data to a new CSV file
+    cd (rootfolder+"\"+patientsgroup+"_extracted\");
+    filename= strcat(erase(patients(i).name,".csv"),'_extracted.csv');
+    writetable(euler_angles, filename);
 end
+cd (rootfolder);
 
-
+end
