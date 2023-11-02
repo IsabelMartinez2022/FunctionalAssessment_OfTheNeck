@@ -1,59 +1,75 @@
 %Task 2
 %Calculation of the spectrogram of each patient and saved as a png image
-
-rootfolder= pwd;
-groupAfolder= rootfolder+"\GroupA_extracted\";
-cd (groupAfolder);
+%The position of the stored appears in the same graph
 
 if not(isfolder("GroupA_spectrograms"))
 mkdir("GroupA_spectrograms")
 end
 
+if not(isfolder("GroupB_spectrograms"))
+mkdir("GroupB_spectrograms")
+end
+
+createSpectrogram('GroupA');
+createSpectrogram('GroupB');
+
+function createSpectrogram (groupname)
+
+rootfolder = pwd;
+groupfolder= rootfolder+"\"+groupname+"_extracted\";
+cd (groupfolder);
+
 for i=1:200
     if isfile("Pte_"+i+"​_extracted.csv")
         read_data= readtable("Pte_"+i+"​_extracted.csv");
+
+        read_data.Var3 = string(read_data.Var3);
+        read_data.Var1 = num2str(read_data.Var1);
         read_data_array = table2array(read_data);
+
+        %We delete the rows containing information about the stored apples
+        rowsEuler= ~contains(read_data_array(:, 2), "stored");
+        rowsApples= contains(read_data_array(:, 2), "stored");
         %patient_xyz contains the Euler angles
-        patient_xyz= str2double(strrep(read_data_array,',','.')); 
-        
-        %QUESTION: TRANSFORM TO QUATERNION??? 
-        %patient_quaternion = eul2quat(patient_xyz,"XYZ");
-        %With eul2quat()
-        %With quatmultiply()
-        %or slerp()
+        patient_xyz= str2double(strrep(read_data_array(rowsEuler,:),',','.')); 
+        patient_storedApples= read_data_array(rowsApples);
+        samples_storedApples= str2double(patient_storedApples(:,1));
 
         fs= 50; %sampling rate of Unity's fixedUpdate()
         window_length = 256;
         overlap = window_length/2;
-        nfft = 512;
+        nfft = 256;
       
         %Calculation of the spectrogram for each time series
-        [s_x,f_x,t_x]=spectrogram(patient_xyz(:,1),window_length,overlap,nfft,fs);
+        %We substract the neutral positions (first row angles)
         figure;
         subplot(3,1,1)
-        waterplot(s_x,f_x,t_x);
+        spectrogram(patient_xyz(:,3)-patient_xyz(1,3),window_length,overlap,nfft,fs);
+        hold on;
+        plot(samples_storedApples
+        %waterplot(s_x,f_x,t_x);
 
-        [s_y,f_y,t_y]=spectrogram(patient_xyz(:,2),window_length,overlap,nfft,fs);
-        subplot(3,1,2)
-        waterplot(s_y,f_y,t_y);
-        
-        [s_z,f_z,t_z]=spectrogram(patient_xyz(:,3),window_length,overlap,nfft,fs);
-        subplot(3,1,3)
-        waterplot(s_z,f_z,t_z);
+        subplot(3,1,2);
+        spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,nfft,fs);
+        %waterplot(s_y,f_y,t_y);
 
-        cd (groupAfolder+"\GroupA_spectrograms\");
+        subplot(3,1,3);
+        spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap,nfft,fs);
+        %waterplot(s_z,f_z,t_z);
+
+        cd (groupfolder+"\"+groupname+"_spectrograms\");
         saveas(gcf,"Spectrogram_Patient"+i+".png");
         close(gcf);
-        cd (groupAfolder);
+        cd (groupfolder);
     end 
 end
+cd (rootfolder)
 
+end 
+%{
 groupBfolder= rootfolder+"\GroupB_extracted\";
 cd (groupBfolder);
 
-if not(isfolder("GroupB_spectrograms"))
-mkdir("GroupB_spectrograms")
-end
 
 for j = 1:200
     if isfile("Pte_"+j+"​_extracted.csv")
@@ -77,8 +93,8 @@ for j = 1:200
         spectrogram(patient_xyz(:,2),window_length,overlap,nfft,fs);        
         %waterplot(s_y,f_y,t_y);
         
+        subplot(3,1,3);
         spectrogram(patient_xyz(:,3),window_length,overlap,nfft,fs);
-        subplot(3,1,3)spectrogram
         %waterplot(s_z,f_z,t_z);
 
         cd (groupBfolder+"\GroupB_spectrograms\");
@@ -97,4 +113,5 @@ function waterplot(s,f,t)
     xlabel("Frequency (Hz)")
     ylabel("Time (s)")
 end
+%}
 %}
