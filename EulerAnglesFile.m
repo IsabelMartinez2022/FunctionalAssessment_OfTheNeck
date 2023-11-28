@@ -37,7 +37,7 @@ for i = 1:length(patients)
     headset_data = patient_data_initiated(contains(patient_data_initiated.Var3,search), :);
     % We extract the Euler angles (x, y, z) from the headset data and the positition of the
     % stored apples
-    euler_angles = headset_data(:, [1 3 11:13]);
+    euler_angles = headset_data(:, [1 2 3 11:13]);
     % We save the extracted data to a new CSV file
     cd (rootfolder+"\"+patientsgroup+"_extracted\");
     filename= strcat(erase(patients(i).name,".csv"),'_extracted.csv');
