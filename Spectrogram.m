@@ -30,6 +30,7 @@ for i=1:200
         rowsApples= contains(read_data_array(:, 3), "stored");
         %patient_xyz contains the Euler angles
         patient_xyz= str2double(strrep(read_data_array(rowsEuler,:),',','.')); 
+        %samples_storedApples contains the samples when an apple was stored
         samples_storedApples= str2double(strrep(read_data_array(rowsApples,1:2),',','.'));
 
         fs= 50; %sampling rate of Unity's fixedUpdate()
@@ -43,17 +44,35 @@ for i=1:200
         figure;
         subplot(3,1,1)
         spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,nfft,fs,'yaxis');
+        % We also add a vertical line for each time sample 
+        time_storedApples = samples_storedApples(:, 2);
+        hold on;
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
+        end
+        %hold off;
         %waterplot(s_x,f_x,t_x);
 
         subplot(3,1,2);
         spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap,nfft,fs,'yaxis');
+        hold on;
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
+        end
+        %hold off;
         %waterplot(s_y,f_y,t_y);
 
         subplot(3,1,3);
         spectrogram(patient_xyz(:,6)-patient_xyz(1,6),window_length,overlap,nfft,fs,'yaxis');
+        hold on;
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
+        end
+        hold off;
         %waterplot(s_z,f_z,t_z);
         
         % We also add a vertical line for each sample in samples_storedApples
+        
         %{
         for index = 1:length(samples_storedApples)
         y=ylim;
