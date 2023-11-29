@@ -45,6 +45,7 @@ for i=1:200
         subplot(3,1,1)
         spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,nfft,fs,'yaxis');
         % We also add a vertical line for each time sample 
+        %time_storedApples = samples_storedApples(:,2) * (window_length - overlap) / fs;
         time_storedApples = samples_storedApples(:, 2);
         hold on;
         for index = 1:length(time_storedApples)
