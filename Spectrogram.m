@@ -10,6 +10,7 @@ createSpectrogram('GroupB');
 function createSpectrogram (groupname)
 
 rootfolder = pwd;
+addpath(rootfolder);
 groupfolder= rootfolder+"\"+groupname+"_extracted\";
 cd (groupfolder);
 
@@ -40,70 +41,50 @@ for i=1:200
         fs= 50; %sampling rate of Unity's fixedUpdate()
         window_length =256;
         overlap = 32;
-        nfft=256;
-
-       
-       f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
-             %Calculation of the spectrogram for each time series
+        f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
+        
+        
+        %Calculation of the spectrogram for each time series
         %We substract the neutral positions (first row angles)
-        
+      
         figure;
-        subplot(3,1,1)
-    
-         [s,f,t] =spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,f,  fs, 'yaxis');
-         myPlotSpectrogram (s,f,t);
+        sub1=subplot(3,1,1);
+        [s,f,t] =spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,f,  fs, 'yaxis');
+        myPlotSpectrogram (s,f,t);
+
         % We also add a vertical line for each time sample 
-        %time_storedApples = samples_storedApples(:,2) * (window_length - overlap) / fs;
-%         time_storedApples = samples_storedApples(:, 2);
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_x,f_x,t_x);
-
-        subplot(3,1,2);
-         [s,f,t] = spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap, f, fs,'yaxis');
-        myPlotSpectrogram (s,f,t);      
+        time_storedApples = samples_storedApples(:, 2)/1000; %conversion to seconds
+        %time_storedApples= samples_storedApples(:,1)* ((window_length -
+        %overlap) / fs); THIS GIVES ERROR
+        y_lim= get(gca, 'YLim');
+        z_lim= max(max(20*log10(abs(s)))); %maximum value of intensity
         
-
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_y,f_y,t_y);
-        
-         subplot(3,1,3);
-         [s,f,t] = spectrogram(patient_xyz(:,6)-patient_xyz(1,6),window_length,overlap, f, fs,'yaxis');
-         myPlotSpectrogram (s,f,t);
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_y,f_y,t_y);
-
-        
-        % We also add a vertical line for each sample in samples_storedApples
-        
-        %{
-        for index = 1:length(samples_storedApples)
-        y=ylim;
-        
-        subplot(3,1,1);
-        hold on;
-        line(samples_storedApples(index,2), y, 'Color', 'r', 'LineWidth', 1);
-
-        subplot(3,1,2);
-        hold on;
-        line([samples_storedApples(index), samples_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-
-        subplot(3,1,3);
-        hold on;
-        line([samples_storedApples(index), samples_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
+        sub1.Tag='1';
+        ax1 = findobj(gcf,'Tag','1'); 
+        hold(ax1,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
         end
-        %}
+
+        sub2= subplot(3,1,2);
+        [s,f,t] = spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap, f, fs,'yaxis');
+        myPlotSpectrogram (s,f,t);      
+        sub2.Tag='1';
+        ax2 = findobj(gcf,'Tag','1'); 
+        hold(ax2,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
+        end
+        
+        sub3= subplot(3,1,3);
+        [s,f,t] = spectrogram(patient_xyz(:,6)-patient_xyz(1,6),window_length,overlap, f, fs,'yaxis');
+        myPlotSpectrogram (s,f,t);
+        sub3.Tag='1';
+        ax3 = findobj(gcf,'Tag','1'); 
+        hold(ax3,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
+        end
 
         cd (groupfolder+"\"+groupname+"_spectrograms\");
         saveas(gcf,"Spectrogram_Patient"+i+".png");

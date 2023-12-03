@@ -3,12 +3,14 @@
 %The position of the stored appears in the same graph
 
 
+
 createSpectrogram('GroupA');
 createSpectrogram('GroupB');
 
 function createSpectrogram (groupname)
 
 rootfolder = pwd;
+addpath(rootfolder);
 groupfolder= rootfolder+"\"+groupname+"_extracted\";
 cd (groupfolder);
 
@@ -39,69 +41,48 @@ for i=1:200
         fs= 50; %sampling rate of Unity's fixedUpdate()
         window_length =256;
         overlap = 32;
-        nfft=256;
-
-       
-       f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
-             %Calculation of the spectrogram for each time series
+        f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
+        
+        
+        %Calculation of the spectrogram for each time series
         %We substract the neutral positions (first row angles)
-        
+      
         figure;
-        subplot(3,1,1)
-    
- [s,f,t] =spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,f,  fs, 'yaxis');
- surf(t, f, 20*log10(abs(s)), 'EdgeColor', 'none');
-axis xy; 
-axis tight; 
-colormap(jet); view(0,90);
-xlabel('Time (secs)');
-colorbar;
-ylabel('Frequency(HZ)');
-       clim([-30, 80])
-        % We also add a vertical line for each time sample 
-        %time_storedApples = samples_storedApples(:,2) * (window_length - overlap) / fs;
-%         time_storedApples = samples_storedApples(:, 2);
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_x,f_x,t_x);
+        sub1=subplot(3,1,1);
+        [s,f,t] =spectrogram(patient_xyz(:,4)-patient_xyz(1,4),window_length,overlap,f,  fs, 'yaxis');
+        myPlotSpectrogram (s,f,t);
 
-        subplot(3,1,2);
-         [s,f,t] = spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap, f, fs,'yaxis');
- surf(t, f, 20*log10(abs(s)), 'EdgeColor', 'none');
-axis xy; 
-axis tight; 
-colormap(jet); view(0,90);
-xlabel('Time (secs)');
-colorbar;
-ylabel('Frequency(HZ)');        
+        % We also add a vertical line for each time sample 
+        time_storedApples = samples_storedApples(:, 2)/1000; %conversion to seconds
+        y_lim= get(gca, 'YLim');
+        z_lim= max(max(20*log10(abs(s)))); %maximum value of intensity
         
-     clim([-30, 80])
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_y,f_y,t_y);
+        sub1.Tag='1';
+        ax1 = findobj(gcf,'Tag','1'); 
+        hold(ax1,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
+        end
+
+        sub2= subplot(3,1,2);
+        [s,f,t] = spectrogram(patient_xyz(:,5)-patient_xyz(1,5),window_length,overlap, f, fs,'yaxis');
+        myPlotSpectrogram (s,f,t);      
+        sub2.Tag='1';
+        ax2 = findobj(gcf,'Tag','1'); 
+        hold(ax2,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
+        end
         
-        subplot(3,1,3);
-         [s,f,t] = spectrogram(patient_xyz(:,6)-patient_xyz(1,6),window_length,overlap, f, fs,'yaxis');
- surf(t, f, 20*log10(abs(s)), 'EdgeColor', 'none');
-axis xy; 
-axis tight; 
-colormap(jet); view(0,90);
-xlabel('Time (secs)');
-colorbar;
-ylabel('Frequency(HZ)')         
-      clim([-30, 80])
-%         hold on;
-%         for index = 1:length(time_storedApples)
-%         line([time_storedApples(index), time_storedApples(index)], ylim, 'Color', 'r', 'LineWidth', 1);
-%         end
-        %hold off;
-        %waterplot(s_y,f_y,t_y);
+        sub3= subplot(3,1,3);
+        [s,f,t] = spectrogram(patient_xyz(:,6)-patient_xyz(1,6),window_length,overlap, f, fs,'yaxis');
+        myPlotSpectrogram (s,f,t);
+        sub3.Tag='1';
+        ax3 = findobj(gcf,'Tag','1'); 
+        hold(ax3,'on');
+        for index = 1:length(time_storedApples)
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 2);
+        end
 
         
         % We also add a vertical line for each sample in samples_storedApples
