@@ -2,8 +2,6 @@
 %Calculation of the spectrogram of each patient and saved as a png image
 %The position of the stored appears in the same graph
 
-
-
 createSpectrogram('GroupA');
 createSpectrogram('GroupB');
 
@@ -17,7 +15,6 @@ cd (groupfolder);
 if not(isfolder(groupname+"_spectrograms"))
 mkdir(groupname+"_spectrograms")
 end
-
 
 
 for i=1:200
@@ -55,9 +52,10 @@ for i=1:200
         myPlotSpectrogram (s,f,t);
    
         % We also add a vertical line for each time sample 
-        time_storedApples = samples_storedApples(:, 2)/1000; %conversion to seconds
-        %time_storedApples= samples_storedApples(:,1)* ((window_length -overlap) / fs); %THIS GIVES ERROR
-        %How the time axis is calculated using STFT:
+        time_storedApples= samples_storedApples(:,2)/1000; %conversion to seconds
+        %time_storedApples = (samples_storedApples(:, 1)-patient_xyz(1,1))/fs; %THIS GIVES AN ERROR TOO
+        %time_storedApples= samples_storedApples(:,1)*((window_length -overlap) / fs); %THIS GIVES AN ERROR
+        %How the time axis is calculated using STFT in Patient 15:
         %for n= 1:length(patient_x)
         %t_spectrogram = 2.5600+(n-1) * (window_length - overlap) / fs;
         %end
@@ -68,7 +66,7 @@ for i=1:200
         ax1 = findobj(gcf,'Tag','1'); 
         hold(ax1,'on');
         for index = 1:length(time_storedApples)
-        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1);
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
 
         sub2= subplot(2,2,2);
@@ -79,7 +77,7 @@ for i=1:200
         ax2 = findobj(gcf,'Tag','1'); 
         hold(ax2,'on');
         for index = 1:length(time_storedApples)
-        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1);
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
         
         sub3= subplot(2,2,3);
@@ -90,7 +88,7 @@ for i=1:200
         ax3 = findobj(gcf,'Tag','1'); 
         hold(ax3,'on');
         for index = 1:length(time_storedApples)
-        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1);
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
 
         sub4= subplot(2,2,4);
@@ -100,7 +98,7 @@ for i=1:200
         ax4 = findobj(gcf,'Tag','1'); 
         hold(ax4,'on');
         for index = 1:length(time_storedApples)
-        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1);
+        line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
 
         cd (groupfolder+"\"+groupname+"_spectrograms\");
