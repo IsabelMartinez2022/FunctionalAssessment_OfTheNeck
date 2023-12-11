@@ -45,15 +45,15 @@ for i=1:200
         %Calculation of the spectrogram for each time series
       
         figure;
-        sub1=subplot(2,2,1);
+        sub1=subplot(4,1,1);
         %We substract the neutral positions (first row angles)
         patient_x=patient_xyz(:,4)-patient_xyz(1,4);
         [s,f,t] =spectrogram(patient_x,window_length,overlap,f,  fs, 'yaxis');
         myPlotSpectrogram (s,f,t);
    
         % We also add a vertical line for each time sample 
-        time_storedApples= samples_storedApples(:,2)/1000; %conversion to seconds
-        %time_storedApples = (samples_storedApples(:, 1)-patient_xyz(1,1))/fs; %THIS GIVES AN ERROR TOO
+        %time_storedApples= samples_storedApples(:,2)/1000; %conversion to seconds
+        time_storedApples = (samples_storedApples(:, 1)-patient_xyz(1,1))/fs ; %THIS GIVES AN ERROR TOO
         %time_storedApples= samples_storedApples(:,1)*((window_length -overlap) / fs); %THIS GIVES AN ERROR
         %How the time axis is calculated using STFT in Patient 15:
         %for n= 1:length(patient_x)
@@ -65,11 +65,18 @@ for i=1:200
         sub1.Tag='1';
         ax1 = findobj(gcf,'Tag','1'); 
         hold(ax1,'on');
+%TEST CODE
+        line([0,0], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);  
+        line([t(1),t(1)], y_lim, [z_lim z_lim],'Color', 'r', 'LineWidth', 1.5);
+        line([t(length(t)),t(length(t))], y_lim, [z_lim z_lim],'Color', 'r', 'LineWidth', 1.5);
+
+        
+
         for index = 1:length(time_storedApples)
         line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
 
-        sub2= subplot(2,2,2);
+        sub2= subplot(4,1,2);
         patient_y=patient_xyz(:,5)-patient_xyz(1,5);
         [s,f,t] = spectrogram(patient_y,window_length,overlap, f, fs,'yaxis');
         myPlotSpectrogram (s,f,t);      
@@ -80,7 +87,7 @@ for i=1:200
         line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
         
-        sub3= subplot(2,2,3);
+        sub3= subplot(4,1,3);
         patient_z=patient_xyz(:,6)-patient_xyz(1,6);
         [s,f,t] = spectrogram(patient_z,window_length,overlap, f, fs,'yaxis');
         myPlotSpectrogram (s,f,t);
@@ -91,7 +98,7 @@ for i=1:200
         line([time_storedApples(index),time_storedApples(index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
         end
 
-        sub4= subplot(2,2,4);
+        sub4= subplot(4,1,4);
         [s,f,t] = spectrogram((abs(patient_x)+abs(patient_y)+abs(patient_z)),window_length,overlap, f, fs,'yaxis');
         myPlotSpectrogram (s,f,t);
         sub4.Tag='1';
