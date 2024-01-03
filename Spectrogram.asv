@@ -1,6 +1,6 @@
 %Task 2
 %Calculation of the spectrogram of each patient and saved as a png image
-%The position of the stored appears in the same graph
+%The positions of the stored appear in the same graph
 
 createSpectrogram('GroupA');
 createSpectrogram('GroupB');
@@ -27,7 +27,6 @@ for i=1:200
         read_data_array = table2array(read_data);
 
         %Rows not containing information about the stored apples
-        %rowsEuler= ~contains(read_data_array(:, 3), "stored");
         rowsEuler= ~contains(read_data_array(:, 3), "stored");
         %Rows containing information about the stored apples
         rowsApples= contains(read_data_array(:, 3), "stored");
@@ -46,7 +45,7 @@ for i=1:200
       
         figure;
         sub1=subplot(4,1,1);
-        %We substract the neutral positions (first row angles)
+        %We substract the neutral positions (first row angles):
         patient_x=patient_xyz(:,4)-patient_xyz(1,4);
         [s,f,t] =spectrogram(patient_x,window_length,overlap,f,  fs, 'yaxis');
         myPlotSpectrogram (s,f,t);

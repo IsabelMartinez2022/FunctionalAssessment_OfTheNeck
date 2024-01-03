@@ -1,4 +1,4 @@
-%Task1
+%Task 1
 %Saves the Euler angles measured with the headset to a new file
 %Saves the location of the first apple that appears and every apple that is
 %stored

@@ -1,6 +1,6 @@
-%Task 2
-%Calculation of the spectrogram of each patient and saved as a png image
-%The position of the stored appears in the same graph
+%Tasks 2 and 3
+%Spectrogram for each patient, saved as a png image
+%The positions of the stored appear in the same graph
 
 createSpectrogram('GroupA');
 createSpectrogram('GroupB');
@@ -27,7 +27,6 @@ for i=1:200
         read_data_array = table2array(read_data);
 
         %Rows not containing information about the stored apples
-        %rowsEuler= ~contains(read_data_array(:, 3), "stored");
         rowsEuler= ~contains(read_data_array(:, 3), "stored");
         %Rows containing information about the stored apples
         rowsApples= contains(read_data_array(:, 3), "stored");
@@ -46,14 +45,13 @@ for i=1:200
       
         figure;
         sub1=subplot(4,1,1);
-        %We substract the neutral positions (first row angles)
+        %We substract the neutral positions (first row angles):
         patient_x=patient_xyz(:,4)-patient_xyz(1,4);
         [s,f,t] =spectrogram(patient_x,window_length,overlap,f,  fs, 'yaxis');
         myPlotSpectrogram (s,f,t);
    
         % We also add a vertical line for each time sample 
         time_storedApples =(samples_storedApples(:, 2)-(patient_xyz(1,2)))/1000; 
-        
         %WRONG CODE 
         %time_steps=time_storedApples*fs;
         %time_steps =time_steps+(window_length/ 2);
@@ -74,7 +72,6 @@ for i=1:200
         %line([0,0], y_lim, [z_lim z_lim],'Color', 'r', 'LineWidth', 1.5);  
         %line([t(1),t(1)], y_lim, [z_lim z_lim],'Color', 'r', 'LineWidth', 1.5);
         %line([t(length(t)),t(length(t))], y_lim, [z_lim z_lim],'Color', 'r', 'LineWidth', 1.5);
-
         for index = 1:length(time_storedApples)
         [~, closest_index] = min(abs(t - time_storedApples(index)));
         line([t(closest_index),t(closest_index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
