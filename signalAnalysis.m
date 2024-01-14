@@ -4,7 +4,7 @@
 
 average_groupA= spectralPower('GroupA');
 average_groupB= spectralPower('GroupB');
-hypothesis_values= analysis(average_groupA, average_groupB);
+[hypothesis_values, p_values]= analysis(average_groupA, average_groupB);
 
 function avgpower= spectralPower (groupname)
 
@@ -63,12 +63,13 @@ cd (rootfolder)
 end 
 
 
-function hypothesis_values= analysis (avg_groupA, avg_groupB)
+function [hypothesis_values,p_values]= analysis (avg_groupA, avg_groupB)
 
 %Check normality
 h_groupA= zeros(4,11);
 h_groupB= zeros(4,11);
 hypothesis_values= zeros(4,11);
+p_values= zeros(4,11);
 
 %Loop through each measurement
 for k = 1:4 
@@ -78,9 +79,9 @@ for k = 1:4
         h_groupB(k, j) = adtest(avg_groupB(:, j, k));
 
         if h_groupA(k,j)|| h_groupB(k,j)
-            [~,hypothesis_values(k,j)] = ranksum(avg_groupA(:, j, k), avg_groupB(:, j, k));
+            [p_values(k,j),hypothesis_values(k,j)] = ranksum(avg_groupA(:, j, k), avg_groupB(:, j, k));
         else 
-            hypothesis_values(k,j)=ttest2(avg_groupA(:, j, k), avg_groupB(:, j, k));
+            [hypothesis_values(k,j),p_values(k,j)] = ttest2(avg_groupA(:, j, k), avg_groupB(:, j, k));
         end 
 
         %{
