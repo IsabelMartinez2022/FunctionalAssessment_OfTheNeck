@@ -67,6 +67,7 @@ end
 cd (rootfolder)
 end 
 
+
 function [hypothesis_values,p_values,means,std_deviations]= analysis (avg_groupA, avg_groupB)
 
 h_groupA= zeros(4,11);
@@ -122,7 +123,6 @@ end
 
 %We calculate the average duration of the spectrograms and its std deviation 
 %for each group
-
 function [avg_duration, stdev_duration]= durationSpectrogram(groupname)
 
 rootfolder = pwd;
