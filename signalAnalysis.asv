@@ -149,7 +149,7 @@ for i=1:200
         read_data_array = table2array(read_data);
         patient_xyz= str2double(strrep(read_data_array,',','.')); 
        
-        duration_patients(index)= patient_xyz(size(patient_xyz,1),2);
+        duration_patients(index)= patient_xyz(length(patient_xyz(1,:)),2);
         index= index+1;
     end 
 end
