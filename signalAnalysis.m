@@ -16,9 +16,9 @@ function avgpower= spectralPower (groupname)
 %Contains the avg spectral power for all 4 measurements (x,y,z,total), 
 %in all 11 frequency bands, for all 30 group patients
 
-window_length =128;
-overlap = 18;
-f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
+window_length =256;
+overlap = 128;
+f=[0, 0.5, 1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25];
 length_freqbands=length(f);
 
 avgpower=zeros(30,length_freqbands,4);
@@ -80,7 +80,8 @@ end
 
 function [hypothesis_values_freq,p_values_freq,means,std_deviations]= analysis_frequency(avg_groupA, avg_groupB)
 
-f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
+
+f=[0, 0.5, 1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25];
 length_freqbands=length(f);
 
 h_groupA= zeros(4,length_freqbands);
@@ -122,13 +123,10 @@ for k = 1:4
         
         %We calculate mean and std deviation for those bands with
         %statistical differences between groups
-        if hypothesis_values_freq(k,j)
-            means(1,j,k)= mean(avg_groupA(:,j,k));
-            means(2,j,k)= mean(avg_groupB(:,j,k));
-            std_deviations(1,j,k)= std(avg_groupA(:,j,k));
-            std_deviations(2,j,k)= std(avg_groupB(:,j,k));
-        end 
-       
+        means(1,j,k)= mean(avg_groupA(:,j,k));
+        means(2,j,k)= mean(avg_groupB(:,j,k));
+        std_deviations(1,j,k)= std(avg_groupA(:,j,k));
+        std_deviations(2,j,k)= std(avg_groupB(:,j,k));       
     end
 end
 end
