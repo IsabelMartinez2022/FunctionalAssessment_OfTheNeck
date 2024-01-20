@@ -47,7 +47,7 @@ for i=1:200
         sub1=subplot(4,1,1);
         %We substract the neutral positions (first row angles):
         patient_x=patient_xyz(:,4)-patient_xyz(1,4);
-        [s,f,t] =spectrogram(patient_x,window_length,overlap,f,  fs, 'yaxis');
+        [s,f,t] =spectrogram(patient_x,window_length,overlap,f,fs,'yaxis');
         myPlotSpectrogram (s,f,t);
    
         % We also add a vertical line for each time sample 
