@@ -10,7 +10,7 @@ power_bands_groupB= spectralPower('GroupB');
 
 duration_groupA= durationSpectrogram('GroupA');
 duration_groupB= durationSpectrogram('GroupB');
-[hypothesis_value_duration, p_value_duration, mean_duration]= analysis_duration(duration_groupA,duration_groupB);
+[hypothesis_value_duration, p_value_duration, mean_duration, stddev_duration]= analysis_duration(duration_groupA,duration_groupB);
 
 
 %Contains the avg spectral power for all 4 measurements (x,y,z,total), 
@@ -236,9 +236,10 @@ cd (rootfolder)
 end 
 
 
-function [hypothesis_value_duration, p_value_duration, mean_duration]= analysis_duration(duration_groupA,duration_groupB)
+function [hypothesis_value_duration, p_value_duration, mean_duration, stddev_duration]= analysis_duration(duration_groupA,duration_groupB)
 
 mean_duration= zeros(2,1);
+stddev_duration= zeros(2,1);
 
 %To check normality
 h_groupA = adtest(duration_groupA);
@@ -253,6 +254,8 @@ end
 
 mean_duration(1)=mean(duration_groupA);
 mean_duration(2)=mean(duration_groupB);
-       
+stddev_duration(1)=std(duration_groupA);
+stddev_duration(2)=std(duration_groupB);
+   
 end
    
