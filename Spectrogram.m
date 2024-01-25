@@ -4,6 +4,8 @@
 
 createSpectrogram('GroupA');
 createSpectrogram('GroupB');
+healthyAndPainSpectrogram('GroupA','GroupB');
+
 
 function createSpectrogram (groupname)
 
@@ -39,7 +41,6 @@ for i=1:200
         window_length =128;
         overlap = 18;
         f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
-        
         
         %Calculation of the spectrogram for each time series
       
@@ -122,4 +123,102 @@ for i=1:200
 end
 cd (rootfolder)
 
+end 
+
+
+function healthyAndPainSpectrogram(groupname1,groupname2)
+
+rootfolder = pwd;
+addpath(rootfolder);
+groupfolder= rootfolder+"\"+groupname1+"_extracted\";
+cd (groupfolder);
+
+a=181;
+b=117;
+sub1=[];
+sub2=[];
+
+    if isfile("Pte_"+a+"​_extracted.csv")
+        read_data= readtable("Pte_"+a+"​_extracted.csv");
+
+        read_data.Var3 = string(read_data.Var3);
+        read_data.Var1 = num2str(read_data.Var1);
+        %Array containing all interesting data
+        read_data_array = table2array(read_data);
+
+        %Rows not containing information about the stored apples
+        rowsEuler= ~contains(read_data_array(:, 3), "stored");
+        %Rows containing information about the stored apples
+        rowsApples= contains(read_data_array(:, 3), "stored");
+        %patient_xyz contains the Euler angles
+        patientA_xyz= str2double(strrep(read_data_array(rowsEuler,:),',','.')); 
+        %samples_storedApples contains the samples when an apple was stored
+        samples_storedApples= str2double(strrep(read_data_array(rowsApples,1:2),',','.'));
+
+        fs= 50; %sampling rate of Unity's fixedUpdate()
+        window_length =128;
+        overlap = 18;
+        f=[1, 3, 7, 9, 11, 13, 15, 17, 19, 21, 23];
+        
+        %Calculation of the spectrogram for each time series
+      
+        figure;
+        sub1=subplot(2,1,1);
+        title(sub1,'Pain-free subject')
+        patientA_x=patientA_xyz(:,4)-patientA_xyz(1,4);
+        [s,f,t] =spectrogram(patientA_x,window_length,overlap,f,fs,'yaxis');
+        myPlotSpectrogram (s,f,t);
+   
+        time_storedApples =(samples_storedApples(:, 2)-(patientA_xyz(1,2)))/1000; 
+
+        y_lim= get(gca, 'YLim');
+        z_lim= max(max(20*log10(abs(s)))); %maximum value of intensity
+        sub1.Tag='1';
+        ax1 = findobj(gcf,'Tag','1'); 
+        hold(ax1,'on');
+        for index = 1:length(time_storedApples)
+        [~, closest_index] = min(abs(t - time_storedApples(index)));
+        line([t(closest_index),t(closest_index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
+        end
+    end 
+
+        cd (rootfolder);
+        groupfolder= rootfolder+"\"+groupname2+"_extracted\";
+        cd (groupfolder);
+
+        if isfile("Pte_"+b+"​_extracted.csv")
+        read_data= readtable("Pte_"+b+"​_extracted.csv");
+
+        read_data.Var3 = string(read_data.Var3);
+        read_data.Var1 = num2str(read_data.Var1);
+        %Array containing all interesting data
+        read_data_array = table2array(read_data);
+
+        %Rows not containing information about the stored apples
+        rowsEuler= ~contains(read_data_array(:, 3), "stored");
+        %Rows containing information about the stored apples
+        rowsApples= contains(read_data_array(:, 3), "stored");
+        %patient_xyz contains the Euler angles
+        patientB_xyz= str2double(strrep(read_data_array(rowsEuler,:),',','.')); 
+        %samples_storedApples contains the samples when an apple was stored
+        samples_storedApples= str2double(strrep(read_data_array(rowsApples,1:2),',','.'));
+        
+        sub2= subplot(2,1,2);
+        title(sub2,'Pain-affected subject')
+        patientB_x=patientB_xyz(:,4)-patientB_xyz(1,4);
+        [s,f,t] = spectrogram(patientB_x,window_length,overlap, f, fs,'yaxis');
+        myPlotSpectrogram (s,f,t);      
+        time_storedApples =(samples_storedApples(:, 2)-(patientB_xyz(1,2)))/1000; 
+
+        y_lim= get(gca, 'YLim');
+        z_lim= max(max(20*log10(abs(s)))); %maximum value of intensity
+        sub2.Tag='1';
+        ax2 = findobj(gcf,'Tag','1'); 
+        hold(ax2,'on');
+        for index = 1:length(time_storedApples)
+        [~, closest_index] = min(abs(t - time_storedApples(index)));
+        line([t(closest_index),t(closest_index)], y_lim, [z_lim z_lim],'Color', 'w', 'LineWidth', 1.5);
+        end
+        end 
+cd (rootfolder)
 end 
