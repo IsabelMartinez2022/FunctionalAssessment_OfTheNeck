@@ -96,7 +96,7 @@ for patient_index= 1:30
         %power_range_groupA(patient_index,1,mov_index) = avg_groupA(patient_index,1,mov_index)+avg_groupA(patient_index,2,mov_index);
         power_range_groupA(patient_index,1,mov_index) = avg_groupA(patient_index,1,mov_index);
         %Total power for the second band range
-        for band_index=2:length(f)
+        for band_index=1:length(f)
         power_range_groupA(patient_index,2,mov_index) = power_range_groupA(patient_index,2, mov_index)+avg_groupA(patient_index,band_index,mov_index);
         end
     end
@@ -110,7 +110,7 @@ for patient_index= 1:30
         %power_range_groupB(patient_index,1,mov_index) = avg_groupB(patient_index,1,mov_index)+avg_groupB(patient_index,2,mov_index);
         power_range_groupB(patient_index,1,mov_index) = avg_groupB(patient_index,1,mov_index);
         %Total power for the second band range
-        for band_index=2:length(f)
+        for band_index=1:length(f)
         power_range_groupB(patient_index,2,mov_index) = power_range_groupB(patient_index,2, mov_index)+avg_groupB(patient_index,band_index,mov_index);
         end
     end
